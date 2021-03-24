@@ -115,12 +115,15 @@ public class CurrentAccount implements Credentials {
 			CurrentAccount destinationAccount, double amount)
 			throws BusinessException {
 		withdrawalAmount(amount);
-		destinationAccount.depositAmount(amount);
-
+		
 		Transfer transfer = new Transfer(location, this, destinationAccount,
 				amount);
 		this.transfers.add(transfer);
-		destinationAccount.transfers.add(transfer);
+
+		if (amount < Transfer.MAX_AUTOAUTH_AMOUNT) {			
+			destinationAccount.depositAmount(amount);
+			destinationAccount.transfers.add(transfer);
+		}
 
 		return transfer;
 	}
