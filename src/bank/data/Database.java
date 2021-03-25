@@ -23,6 +23,7 @@ import bank.business.domain.CurrentAccountId;
 import bank.business.domain.Employee;
 import bank.business.domain.OperationLocation;
 import bank.business.domain.Transaction;
+import bank.business.domain.Transfer;
 
 /**
  * @author Ingrid Nunes
@@ -34,7 +35,7 @@ public class Database {
 	private final Map<String, Employee> employees;
 	private final Log log;
 	private final Map<Long, OperationLocation> operationLocations;
-	private final List<Transaction> pendingTransfers;
+	private final List<Transfer> pendingTransfers;
 
 	public Database() {
 		this(true);
@@ -81,7 +82,7 @@ public class Database {
 		return operationLocations.get(number);
 	}
 	
-	public List<Transaction> getPendingTransfers() {
+	public List<Transfer> getPendingTransfers() {
 		return this.pendingTransfers;
 	}
 
@@ -165,7 +166,11 @@ public class Database {
 				operationLocation);
 	}
 
-	public void save(Transaction transfer) {
+	public void save(Transfer transfer) {
 		this.pendingTransfers.add(transfer);
+	}
+	
+	public boolean remove(Transfer transfer) {
+		return this.pendingTransfers.remove(transfer);
 	}
 }

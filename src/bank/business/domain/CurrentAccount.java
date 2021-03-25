@@ -154,5 +154,12 @@ public class CurrentAccount implements Credentials {
 
 		this.balance -= amount;
 	}
+	
+	public void updateTransferStatus(Transfer transfer, Transfer.Status status) {
+		if (this.pendingTransfers.remove(transfer) == true) {
+			transfer.setStatus(status);
+			this.transfers.add(transfer);			
+		}
+	}
 
 }
