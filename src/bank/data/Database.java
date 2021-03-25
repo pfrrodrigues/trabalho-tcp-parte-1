@@ -80,6 +80,10 @@ public class Database {
 	public OperationLocation getOperationLocation(long number) {
 		return operationLocations.get(number);
 	}
+	
+	public List<Transaction> getPendingTransfers() {
+		return this.pendingTransfers;
+	}
 
 	private void initData() {
 		try {
