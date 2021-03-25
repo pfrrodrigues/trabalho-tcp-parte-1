@@ -3,10 +3,12 @@
  */
 package bank.data;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -32,6 +34,7 @@ public class Database {
 	private final Map<String, Employee> employees;
 	private final Log log;
 	private final Map<Long, OperationLocation> operationLocations;
+	private final List<Transaction> pendingTransfers;
 
 	public Database() {
 		this(true);
@@ -42,6 +45,7 @@ public class Database {
 		this.operationLocations = new HashMap<>();
 		this.employees = new HashMap<>();
 		this.currentAccounts = new HashMap<>();
+		this.pendingTransfers = new ArrayList<>();
 		if (initData) {
 			initData();
 		}
@@ -157,4 +161,7 @@ public class Database {
 				operationLocation);
 	}
 
+	public void save(Transaction transfer) {
+		this.pendingTransfers.add(transfer);
+	}
 }
