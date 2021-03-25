@@ -16,6 +16,7 @@ public class CurrentAccount implements Credentials {
 	private List<Deposit> deposits;
 	private CurrentAccountId id;
 	private List<Transfer> transfers;
+	private List<Transfer> pendingTransfers;
 	private List<Withdrawal> withdrawals;
 
 	public CurrentAccount(Branch branch, long number, Client client) {
@@ -25,6 +26,7 @@ public class CurrentAccount implements Credentials {
 		client.setAccount(this);
 		this.deposits = new ArrayList<>();
 		this.transfers = new ArrayList<>();
+		this.pendingTransfers = new ArrayList<>();
 		this.withdrawals = new ArrayList<>();
 	}
 
@@ -118,11 +120,13 @@ public class CurrentAccount implements Credentials {
 		
 		Transfer transfer = new Transfer(location, this, destinationAccount,
 				amount);
-		this.transfers.add(transfer);
-
+				
 		if (amount < Transfer.MAX_AUTOAUTH_AMOUNT) {			
+			this.transfers.add(transfer);
 			destinationAccount.depositAmount(amount);
 			destinationAccount.transfers.add(transfer);
+		} else {
+			this.pendingTransfers.add(transfer);
 		}
 
 		return transfer;
