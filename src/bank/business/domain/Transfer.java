@@ -5,7 +5,7 @@ package bank.business.domain;
  * 
  */
 public class Transfer extends Transaction {
-	enum Status {
+	public enum Status {
 		FINISHED, PENDING, CANCELED
 	};
 
@@ -32,4 +32,11 @@ public class Transfer extends Transaction {
 		return destinationAccount;
 	}
 
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
+	}
 }
