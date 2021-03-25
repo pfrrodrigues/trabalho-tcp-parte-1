@@ -88,6 +88,7 @@ public class CurrentAccount implements Credentials {
 		transactions.addAll(deposits);
 		transactions.addAll(withdrawals);
 		transactions.addAll(transfers);
+		transactions.addAll(pendingTransfers);
 		return transactions;
 	}
 
