@@ -104,7 +104,7 @@ public class StatementCommand extends Command {
 				} else if (transfer.getStatus() == Transfer.Status.PENDING) {
 					sb.append(getTextManager().getText("status.pending"));					
 				} else {
-					sb.append(getTextManager().getText("status.finished"));
+					sb.append(getTextManager().getText("status.cancelled"));
 				}
 				if (transfer.getAccount().getId().equals(caId)) {
 					CurrentAccountId dstId = transfer.getDestinationAccount()
