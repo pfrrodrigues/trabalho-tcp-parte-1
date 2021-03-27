@@ -34,7 +34,8 @@ public class TransferCommand extends Command {
 				.getOperationLocation().getNumber(), srcBranch,
 				srcAccountNumber, dstBranch, dstAccountNumber, amount);
 		
-		if (transfer.getStatus() == Transfer.Status.PENDING) {
+		if (transfer.isPending()) {
+
 			System.out.println(getTextManager().getText(
 					"message.operation.pending"));
 		} else {
