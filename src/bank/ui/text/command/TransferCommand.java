@@ -33,9 +33,14 @@ public class TransferCommand extends Command {
 		Transfer transfer = accountOperationService.transfer(bankInterface
 				.getOperationLocation().getNumber(), srcBranch,
 				srcAccountNumber, dstBranch, dstAccountNumber, amount);
-
-		System.out.println(getTextManager().getText(
-				"message.operation.succesfull"));
+		
+		if (transfer.getStatus() == Transfer.Status.PENDING) {
+			System.out.println(getTextManager().getText(
+					"message.operation.pending"));
+		} else {
+			System.out.println(getTextManager().getText(
+					"message.operation.succesfull"));			
+		}
 		System.out.println(getTextManager().getText("transfer") + ": "
 				+ transfer.getAmount());
 	}

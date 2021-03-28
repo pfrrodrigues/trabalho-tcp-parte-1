@@ -2,8 +2,10 @@
  * Created on 5 Jan 2014 00:51:19 
  */
 package bank.business.impl;
+import bank.ui.text.UIUtils;
 
 import java.util.Date;
+import java.util.List;
 
 import bank.business.AccountManagementService;
 import bank.business.BusinessException;
@@ -12,6 +14,8 @@ import bank.business.domain.Client;
 import bank.business.domain.CurrentAccount;
 import bank.business.domain.Employee;
 import bank.business.domain.OperationLocation;
+import bank.business.domain.Transfer;
+import bank.business.domain.Transfer.Status;
 import bank.data.Database;
 import bank.util.RandomString;
 
@@ -64,5 +68,29 @@ public class AccountManagementServiceImpl implements AccountManagementService {
 
 		return employee;
 	}
-
+	
+	public List<Transfer> getPendingTranfers() {
+		return this.database.getPendingTransfers();
+	}
+	
+	public void updateTransferStatus(Transfer transfer, Status status) {
+		StringBuffer str = new StringBuffer();
+		UIUtils uiUtils = UIUtils.INSTANCE;
+		
+		this.database.remove(transfer);		// Remove transfer from database
+		
+		if (status == Status.FINISHED) {
+			transfer.getAccount().updateTransferStatus(transfer, status);
+			transfer.getDestinationAccount().addTransferToDestAccount(transfer);
+			str.append(uiUtils.getTextManager().getText("status.finished"));
+			System.out.println(str);
+			
+		} else { // Status.CANCELED
+			transfer.getAccount().updateTransferStatus(transfer, status);
+			transfer.getAccount().returnAmountToSource(transfer);
+			str.append(uiUtils.getTextManager().getText("status.cancelled"));
+			System.out.println(str);
+		}
+	}
+	
 }
