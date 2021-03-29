@@ -156,6 +156,7 @@ public class CurrentAccount implements Credentials {
 	}
 	
 	public void updateTransferStatus(Transfer transfer, Transfer.Status status) {
+<<<<<<< HEAD
 		if (this.pendingTransfers.remove(transfer) == true) {
 			transfer.setStatus(status);
 			this.transfers.add(transfer);

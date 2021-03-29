@@ -102,6 +102,7 @@ public class StatementCommand extends Command {
 				if (transfer.isFinished()) {
 					sb.append(getTextManager().getText("status.finished"));
 				} else if (transfer.isPending()) {
+
 					sb.append(getTextManager().getText("status.pending"));					
 				} else {
 					sb.append(getTextManager().getText("status.cancelled"));
