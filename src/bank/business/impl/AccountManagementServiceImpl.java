@@ -85,11 +85,13 @@ public class AccountManagementServiceImpl implements AccountManagementService {
 			str.append(uiUtils.getTextManager().getText("status.finished"));
 			System.out.println(str);
 			
-		} else { // Status.CANCELED
+		} else if (status == Status.CANCELED) { // Status.CANCELED
 			transfer.getAccount().updateTransferStatus(transfer, status);
 			transfer.getAccount().returnAmountToSource(transfer);
 			str.append(uiUtils.getTextManager().getText("status.cancelled"));
 			System.out.println(str);
+		} else { // Status.PENDING or an invalid status
+			str.append(uiUtils.getTextManager().getText("message.unauthorised.status"));
 		}
 	}
 	

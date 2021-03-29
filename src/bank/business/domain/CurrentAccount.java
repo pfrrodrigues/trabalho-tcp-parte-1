@@ -156,7 +156,6 @@ public class CurrentAccount implements Credentials {
 	}
 	
 	public void updateTransferStatus(Transfer transfer, Transfer.Status status) {
-<<<<<<< HEAD
 		if (this.pendingTransfers.remove(transfer) == true) {
 			transfer.setStatus(status);
 			this.transfers.add(transfer);
@@ -169,6 +168,10 @@ public class CurrentAccount implements Credentials {
 	}
 	
 	public void returnAmountToSource(Transfer transfer) {
-		this.balance += transfer.getAmount();
+		try {
+			this.depositAmount(transfer.getAmount());
+		} catch (BusinessException e) {
+			e.printStackTrace();
+		}
 	}
 }
