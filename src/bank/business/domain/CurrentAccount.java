@@ -29,7 +29,7 @@ public class CurrentAccount implements Credentials {
 		this.pendingTransfers = new ArrayList<>();
 		this.withdrawals = new ArrayList<>();
 	}
-
+	
 	public CurrentAccount(Branch branch, long number, Client client,
 			double initialBalance) {
 		this(branch, number, client);
@@ -156,11 +156,22 @@ public class CurrentAccount implements Credentials {
 	}
 	
 	public void updateTransferStatus(Transfer transfer, Transfer.Status status) {
-		if (this.pendingTransfers.remove(transfer)) {
-
+		if (this.pendingTransfers.remove(transfer) == true) {
 			transfer.setStatus(status);
-			this.transfers.add(transfer);			
+			this.transfers.add(transfer);
 		}
 	}
-
+	
+	public void addTransferToDestAccount(Transfer transfer) {
+		this.transfers.add(transfer);
+		this.balance += transfer.getAmount();
+	}
+	
+	public void returnAmountToSource(Transfer transfer) {
+		try {
+			this.depositAmount(transfer.getAmount());
+		} catch (BusinessException e) {
+			e.printStackTrace();
+		}
+	}
 }

@@ -99,9 +99,10 @@ public class StatementCommand extends Command {
 				sb.append("+ ").append(transaction.getAmount());
 			} else if (transaction instanceof Transfer) {
 				Transfer transfer = (Transfer) transaction;
-				if (transfer.getStatus() == Transfer.Status.FINISHED) {
+				if (transfer.isFinished()) {
 					sb.append(getTextManager().getText("status.finished"));
-				} else if (transfer.getStatus() == Transfer.Status.PENDING) {
+				} else if (transfer.isPending()) {
+
 					sb.append(getTextManager().getText("status.pending"));					
 				} else {
 					sb.append(getTextManager().getText("status.cancelled"));
