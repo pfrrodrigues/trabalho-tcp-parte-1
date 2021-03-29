@@ -151,6 +151,9 @@ public class AccountOperationServiceImpl implements AccountOperationService {
 				dstAccountNumber);
 		Transfer transfer = source.transfer(
 				getOperationLocation(operationLocation), destination, amount);
+		if (transfer.isPending()) {
+			database.save(transfer);
+		}
 		return transfer;
 	}
 

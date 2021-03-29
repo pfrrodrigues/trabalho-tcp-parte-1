@@ -79,9 +79,10 @@ public class StatementCommand extends Command {
 		sb.append(getTextManager().getText("date")).append("\t\t\t");
 		sb.append(getTextManager().getText("location")).append("\t");
 		sb.append(getTextManager().getText("operation.type")).append("\t");
-		sb.append(getTextManager().getText("details")).append("\t");
+		sb.append(getTextManager().getText("details")).append("\t\t");
 		sb.append(getTextManager().getText("amount")).append("\n");
-		sb.append("---------------------------------------------------------------------------------\n");
+		sb.append("--------------------------------------------------"
+				+ "-------------------------------------------------\n");
 		for (Transaction transaction : transactions) {
 			sb.append(UIUtils.INSTANCE.formatDateTime(transaction.getDate()))
 					.append("\t");
@@ -94,27 +95,34 @@ public class StatementCommand extends Command {
 									+ transaction.getClass().getSimpleName()))
 					.append("\t\t");
 			if (transaction instanceof Deposit) {
-				sb.append(((Deposit) transaction).getEnvelope()).append("\t\t");
+				sb.append(((Deposit) transaction).getEnvelope()).append("\t\t\t");
 				sb.append("+ ").append(transaction.getAmount());
 			} else if (transaction instanceof Transfer) {
 				Transfer transfer = (Transfer) transaction;
+				if (transfer.getStatus() == Transfer.Status.FINISHED) {
+					sb.append(getTextManager().getText("status.finished"));
+				} else if (transfer.getStatus() == Transfer.Status.PENDING) {
+					sb.append(getTextManager().getText("status.pending"));					
+				} else {
+					sb.append(getTextManager().getText("status.cancelled"));
+				}
 				if (transfer.getAccount().getId().equals(caId)) {
 					CurrentAccountId dstId = transfer.getDestinationAccount()
 							.getId();
-					sb.append("AG ").append(dstId.getBranch().getNumber())
+					sb.append(" AG ").append(dstId.getBranch().getNumber())
 							.append(" C/C ").append(dstId.getNumber())
 							.append("\t");
 					sb.append("- ");
 				} else {
 					CurrentAccountId srcId = transfer.getAccount().getId();
-					sb.append("AG ").append(srcId.getBranch().getNumber())
+					sb.append(" AG ").append(srcId.getBranch().getNumber())
 							.append(" C/C ").append(srcId.getNumber())
 							.append("\t");
 					sb.append("+ ");
 				}
 				sb.append(transaction.getAmount());
 			} else if (transaction instanceof Withdrawal) {
-				sb.append("\t\t\t");
+				sb.append("\t\t\t\t");
 				sb.append("- ").append(transaction.getAmount());
 			}
 			sb.append("\n");
