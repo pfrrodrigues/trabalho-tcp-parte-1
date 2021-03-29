@@ -109,11 +109,11 @@ public class Database {
 			// Current Accounts
 			Client client1 = new Client("Ingrid", "Nunes", 1234567890, "123",
 					new Date());
-			CurrentAccount ca1 = new CurrentAccount(b1, 1l, client1, 30000); // valor original é 300
+			CurrentAccount ca1 = new CurrentAccount(b1, 1l, client1, 300);
 			save(ca1);
 			Client client2 = new Client("Joao", "Silva", 1234567890, "123",
 					new Date());
-			CurrentAccount ca2 = new CurrentAccount(b2, 2l, client2, 20000); // valor original é 200
+			CurrentAccount ca2 = new CurrentAccount(b2, 2l, client2, 200);
 			save(ca2);
 			Client client3 = new Client("Richer", "Rich", 1234567890, "123",
 					new Date());

@@ -40,4 +40,11 @@ public class Transfer extends Transaction {
 		this.status = status;
 	}
 	
+	public boolean isPending() {
+		return this.getStatus() == Status.PENDING;
+	}
+	
+	public boolean isFinished() {
+		return this.getStatus() == Status.FINISHED;
+	}
 }
