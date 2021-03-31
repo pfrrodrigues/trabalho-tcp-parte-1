@@ -18,7 +18,7 @@ public class Transfer extends Transaction {
 			CurrentAccount destinationAccount, double amount) {
 		super(location, account, amount);
 		this.destinationAccount = destinationAccount;
-		if (amount < MAX_AUTOAUTH_AMOUNT) {
+		if (amount < MAX_AUTOAUTH_AMOUNT || location instanceof Branch) {
 			this.status = Status.FINISHED;
 		} else {
 			this.status = Status.PENDING;

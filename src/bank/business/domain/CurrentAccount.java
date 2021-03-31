@@ -122,12 +122,12 @@ public class CurrentAccount implements Credentials {
 		Transfer transfer = new Transfer(location, this, destinationAccount,
 				amount);
 				
-		if (amount < Transfer.MAX_AUTOAUTH_AMOUNT) {			
+		if (transfer.isPending()) {			
+			this.pendingTransfers.add(transfer);
+		} else {
 			this.transfers.add(transfer);
 			destinationAccount.depositAmount(amount);
 			destinationAccount.transfers.add(transfer);
-		} else {
-			this.pendingTransfers.add(transfer);
 		}
 
 		return transfer;
