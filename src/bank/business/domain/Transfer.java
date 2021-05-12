@@ -8,21 +8,15 @@ public class Transfer extends Transaction {
 	public enum Status {
 		FINISHED, PENDING, CANCELED
 	};
-
-	public static final int MAX_AUTOAUTH_AMOUNT = 5000;
 	
 	private CurrentAccount destinationAccount;
 	private Status status; 
 
 	public Transfer(OperationLocation location, CurrentAccount account,
-			CurrentAccount destinationAccount, double amount) {
+			CurrentAccount destinationAccount, double amount, Status status) {
 		super(location, account, amount);
 		this.destinationAccount = destinationAccount;
-		if (amount < MAX_AUTOAUTH_AMOUNT || location instanceof Branch) {
-			this.status = Status.FINISHED;
-		} else {
-			this.status = Status.PENDING;
-		}
+		this.status = status;
 	}
 
 	/**
