@@ -121,15 +121,8 @@ public class CurrentAccount implements Credentials {
 			CurrentAccount destinationAccount, double amount)
 			throws BusinessException {
 		withdrawalAmount(amount);
-		Transfer.Status transferStatus; 
+		Transfer.Status transferStatus = defineTransferStatus(amount, location); 
 		
-		
-		if (amount < MAX_AUTOAUTH_AMOUNT || location instanceof Branch) {
-			transferStatus = Status.FINISHED;
-		} else {
-			transferStatus = Status.PENDING;
-		}
-
 		Transfer transfer = new Transfer(location, this, destinationAccount,
 				amount, transferStatus);
 				
@@ -184,5 +177,15 @@ public class CurrentAccount implements Credentials {
 		} catch (BusinessException e) {
 			e.printStackTrace();
 		}
+	}
+
+	private Transfer.Status defineTransferStatus(double amount, OperationLocation location) {
+		Transfer.Status transferStatus;
+		if (amount < MAX_AUTOAUTH_AMOUNT || location instanceof Branch) {
+			transferStatus = Status.FINISHED;
+		} else {
+			transferStatus = Status.PENDING;
+		}
+		return transferStatus;
 	}
 }
