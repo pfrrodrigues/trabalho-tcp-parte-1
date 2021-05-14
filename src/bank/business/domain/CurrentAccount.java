@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import bank.business.BusinessException;
+import bank.business.domain.Transfer.Status;
 
 /**
  * @author Ingrid Nunes
@@ -18,6 +19,8 @@ public class CurrentAccount implements Credentials {
 	private List<Transfer> transfers;
 	private List<Transfer> pendingTransfers;
 	private List<Withdrawal> withdrawals;
+	
+	public static final int MAX_AUTOAUTH_AMOUNT = 5000;
 
 	public CurrentAccount(Branch branch, long number, Client client) {
 		this.id = new CurrentAccountId(branch, number);
@@ -118,9 +121,10 @@ public class CurrentAccount implements Credentials {
 			CurrentAccount destinationAccount, double amount)
 			throws BusinessException {
 		withdrawalAmount(amount);
+		Transfer.Status transferStatus = defineTransferStatus(amount, location); 
 		
 		Transfer transfer = new Transfer(location, this, destinationAccount,
-				amount);
+				amount, transferStatus);
 				
 		if (transfer.isPending()) {			
 			this.pendingTransfers.add(transfer);
@@ -173,5 +177,15 @@ public class CurrentAccount implements Credentials {
 		} catch (BusinessException e) {
 			e.printStackTrace();
 		}
+	}
+
+	private Transfer.Status defineTransferStatus(double amount, OperationLocation location) {
+		Transfer.Status transferStatus;
+		if (amount < MAX_AUTOAUTH_AMOUNT || location instanceof Branch) {
+			transferStatus = Status.FINISHED;
+		} else {
+			transferStatus = Status.PENDING;
+		}
+		return transferStatus;
 	}
 }
