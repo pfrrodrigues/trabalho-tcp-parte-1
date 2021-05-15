@@ -78,13 +78,13 @@ public class AccountManagementServiceImpl implements AccountManagementService {
 		UIUtils uiUtils = UIUtils.INSTANCE;
 		
 		if (status == Status.FINISHED) {
-			transfer.getAccount().finishTransfer(transfer, status);
+			transfer.getAccount().finishTransfer(transfer);
 			this.database.remove(transfer);	
 			str.append(uiUtils.getTextManager().getText("status.finished"));
 			System.out.println(str);
 			
 		} else if (status == Status.CANCELED) {
-			transfer.getAccount().cancelTransfer(transfer, status);
+			transfer.getAccount().cancelTransfer(transfer);
 			this.database.remove(transfer);
 			str.append(uiUtils.getTextManager().getText("status.cancelled"));
 			System.out.println(str);

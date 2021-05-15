@@ -160,7 +160,7 @@ public class CurrentAccount implements Credentials {
 		this.balance -= amount;
 	}
 	
-	private void removeThePendingTransfer(Transfer transfer) {
+	private void removeFromPendingTransfers(Transfer transfer) {
 		this.pendingTransfers.remove(transfer);
 	}
 	
@@ -168,29 +168,29 @@ public class CurrentAccount implements Credentials {
 		return this.transfers.add(transfer);
 	}
 	
-	public void finishTransfer(Transfer transfer, Transfer.Status status) {
-		transfer.setStatus(status);
-		transfer.getDestinationAccount().receivesTransfer(transfer);
+	public void finishTransfer(Transfer transfer) {
+		transfer.setStatus(Status.FINISHED);
+		transfer.getDestinationAccount().receiveTransfer(transfer);
 		
 		if (transferWasAddedInTransferList(transfer)) {
-			removeThePendingTransfer(transfer);
+			removeFromPendingTransfers(transfer);
 		}
 	}
 	
-	public void cancelTransfer(Transfer transfer, Transfer.Status status) {
-		transfer.setStatus(status);
-		cancelTransferOfAmount(transfer);
+	public void cancelTransfer(Transfer transfer) {
+		transfer.setStatus(Status.CANCELED);
+		chargebackTransfer(transfer);
 		if (transferWasAddedInTransferList(transfer)) {
-			removeThePendingTransfer(transfer);
+			removeFromPendingTransfers(transfer);
 		}
 	}
 	
-	private void receivesTransfer(Transfer transfer) {
+	private void receiveTransfer(Transfer transfer) {
 		this.transfers.add(transfer);
 		this.balance += transfer.getAmount();
 	}
 	
-	private void cancelTransferOfAmount(Transfer transfer) {
+	private void chargebackTransfer(Transfer transfer) {
 		try {
 			this.depositAmount(transfer.getAmount());
 		} catch (BusinessException e) {
