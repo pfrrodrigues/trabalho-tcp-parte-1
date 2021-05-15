@@ -26,6 +26,6 @@ public interface AccountManagementService {
 	
 	public List<Transfer> getPendingTranfers();
 	
-	public void updateTransferStatus(Transfer transfer, Status status);
+	public void updateTranferStatusTo(Status status, Transfer transfer);
 
 }

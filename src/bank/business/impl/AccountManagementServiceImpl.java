@@ -73,26 +73,24 @@ public class AccountManagementServiceImpl implements AccountManagementService {
 		return this.database.getPendingTransfers();
 	}
 	
-	public void updateTransferStatus(Transfer transfer, Status status) {
+	public void updateTranferStatusTo(Status status, Transfer transfer) {
 		StringBuffer str = new StringBuffer();
 		UIUtils uiUtils = UIUtils.INSTANCE;
 		
-		this.database.remove(transfer);		// Remove transfer from database
-		
 		if (status == Status.FINISHED) {
-			transfer.getAccount().updateTransferStatus(transfer, status);
-			transfer.getDestinationAccount().addTransferToDestAccount(transfer);
+			transfer.getAccount().finishTransfer(transfer, status);
+			this.database.remove(transfer);	
 			str.append(uiUtils.getTextManager().getText("status.finished"));
 			System.out.println(str);
 			
-		} else if (status == Status.CANCELED) { // Status.CANCELED
-			transfer.getAccount().updateTransferStatus(transfer, status);
-			transfer.getAccount().returnAmountToSource(transfer);
+		} else if (status == Status.CANCELED) {
+			transfer.getAccount().cancelTransfer(transfer, status);
+			this.database.remove(transfer);
 			str.append(uiUtils.getTextManager().getText("status.cancelled"));
 			System.out.println(str);
-		} else { // Status.PENDING or an invalid status
+		} else {
 			str.append(uiUtils.getTextManager().getText("message.unauthorised.status"));
+			System.out.println(str);
 		}
 	}
-	
 }
