@@ -5,6 +5,7 @@ import java.util.List;
 
 import bank.business.BusinessException;
 import bank.business.domain.Transfer.Status;
+import bank.ui.text.UIUtils;
 
 /**
  * @author Ingrid Nunes
@@ -159,19 +160,37 @@ public class CurrentAccount implements Credentials {
 		this.balance -= amount;
 	}
 	
-	public void updateTransferStatus(Transfer transfer, Transfer.Status status) {
-		if (this.pendingTransfers.remove(transfer)) {
-			transfer.setStatus(status);
-			this.transfers.add(transfer);
+	private void removeFromPendingTransfers(Transfer transfer) {
+		this.pendingTransfers.remove(transfer);
+	}
+	
+	private boolean transferWasAddedInTransferList(Transfer transfer) {
+		return this.transfers.add(transfer);
+	}
+	
+	public void finishTransfer(Transfer transfer) {
+		transfer.setStatus(Status.FINISHED);
+		transfer.getDestinationAccount().receiveTransfer(transfer);
+		
+		if (transferWasAddedInTransferList(transfer)) {
+			removeFromPendingTransfers(transfer);
 		}
 	}
 	
-	public void addTransferToDestAccount(Transfer transfer) {
+	public void cancelTransfer(Transfer transfer) {
+		transfer.setStatus(Status.CANCELED);
+		chargebackTransfer(transfer);
+		if (transferWasAddedInTransferList(transfer)) {
+			removeFromPendingTransfers(transfer);
+		}
+	}
+	
+	private void receiveTransfer(Transfer transfer) {
 		this.transfers.add(transfer);
 		this.balance += transfer.getAmount();
 	}
 	
-	public void returnAmountToSource(Transfer transfer) {
+	private void chargebackTransfer(Transfer transfer) {
 		try {
 			this.depositAmount(transfer.getAmount());
 		} catch (BusinessException e) {

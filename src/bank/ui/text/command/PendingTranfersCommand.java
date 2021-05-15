@@ -125,7 +125,6 @@ public class PendingTranfersCommand extends Command {
 			index = chooseIndex(pendingTransfers);
 			
 			Transfer transfer = pendingTransfers.get(index);
-			pendingTransfers.remove(transfer);
 			
 			printSelectedTransfer(transfer);
 			
@@ -133,15 +132,12 @@ public class PendingTranfersCommand extends Command {
 			
 			switch (statementType) {
 				case AUTHORIZED:
-					this.accountManagementService.updateTransferStatus(transfer, Status.FINISHED);
+					this.accountManagementService.updateTranferStatusTo(Status.FINISHED, transfer);
 					break;
 				case UNAUTHORISED:
-					this.accountManagementService.updateTransferStatus(transfer, Status.CANCELED);
+					this.accountManagementService.updateTranferStatusTo(Status.CANCELED, transfer);
 					break;
 			}
-			
 		}
-		
 	}
-	
 }
